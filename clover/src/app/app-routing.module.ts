@@ -38,13 +38,14 @@ import { FlightAdminGuard } from './guards/flightAdmin/flight-admin.guard';
 
 
 const routes: Routes = [
-  {
-    path: "",
-    component: SingInComponent
-  },
+   {
+     path: "",
+     component: SingInComponent
+   },
   {
     path: "sing-in",
     component: SingInComponent
+    //http://localhost:4200/
   },
   {
     path: "flights",

@@ -4,6 +4,7 @@
 
 export const environment = {
   production: false
+ // kratosApiUrl: 'https://your-kratos-api-url.com',
 };
 
 /*

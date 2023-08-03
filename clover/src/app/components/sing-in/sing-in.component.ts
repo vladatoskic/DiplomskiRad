@@ -12,6 +12,10 @@ import { RegisterUserService } from 'src/app/services/userDetails/registerUser/r
 import { SocialAuthService } from "angularx-social-login";
 import { FacebookLoginProvider, GoogleLoginProvider } from "angularx-social-login";
 import { ToastrService } from 'ngx-toastr';
+import { Configuration,  FrontendApi, LoginFlow} from '@ory/kratos-client';
+import AuthService from 'src/app/services/AuthService';
+import KratosAuthService from 'src/app/services/AuthService';
+import { KratosFormDetails } from 'src/app/entities/kratosForm/KratosFormDetails';
 
 @Component({
   selector: 'app-sing-in',
@@ -30,7 +34,8 @@ export class SingInComponent implements OnInit {
   displayStr = "SingIn";
   user: User;
 
-  constructor(private flightService: AllFlightsService, private registerService: RegisterUserService, public service: UserDetailsService, public router: Router, http: HttpClient,private authService: SocialAuthService, private toster: ToastrService)
+
+  constructor(private flightService: AllFlightsService,private kratosAuthService:KratosAuthService, private registerService: RegisterUserService, public service: UserDetailsService, public router: Router, http: HttpClient,private authService: SocialAuthService, private toster: ToastrService)
    {
      //  this.allFlightss=this.flightService.getFlights();
        this.http = http;
@@ -38,7 +43,7 @@ export class SingInComponent implements OnInit {
   
   ngOnInit(): void 
   {
-      this.service.refreshList();
+      //this.service.refreshList();
   }
 
   navigateTo(section: string){
@@ -50,27 +55,88 @@ export class SingInComponent implements OnInit {
     this.displayStr="SingIn";
   }
 
+  async onLoginFormSubmit() {
+
+    var kratosApi = new FrontendApi({basePath:"https://127.0.0.1:4433", isJsonMime:(val) => true});
+   // this.kratosApi.createBrowserLoginFlow({})
+    var flowID = "";
+    kratosApi.createBrowserLoginFlow({}).then((value)=>{
+      flowID = value.data.id;
+      console.log(flowID);
+     // kratosApi.logi
+    })
+    // Configure the ORY Kratos client.
+   // const kratosApi = new Configuration({ basePath: 'https://your-kratos-server-url/' });
+
+    // try {
+    //   // Initiate the login request with ORY Kratos.
+    //   const response = await kratosApi({},
+    //     kratosApi
+    //   );
+
+    //   // Construct the payload for the login request.
+    //   const loginPayload: SubmitSelfServiceLoginFlowWithPasswordMethod = {
+    //     password: this.password,
+    //     csrfToken: response.data.methods.password.config.csrf_token,
+    //     identifier: this.username,
+    //   };
+
+    //   // Submit the login request to ORY Kratos.
+    //   const loginResponse = await SubmitSelfServiceLoginFlowWithPasswordMethod.submitSelfServiceLoginFlowWithPasswordMethod(
+    //     response.data.id, loginPayload,
+    //     {},
+    //     kratosApi
+    //   );
+
+    //   // Handle successful login.
+    //   if (loginResponse.data.state === 'success') {
+    //     // Save the session token (access token) in a secure HTTP-only cookie.
+    //     // You can use Angular's HttpClient to send the token to your .NET backend in subsequent API requests.
+
+    //     // Redirect the user to the dashboard or any other authenticated page.
+    //     // You can use Angular Router for navigation.
+    //   } else if (loginResponse.data.state === 'show_form') {
+    //     // Handle failed login.
+    //     this.errorMessage = 'Invalid username or password.';
+    //   } else {
+    //     // Handle other cases, if necessary.
+    //   }
+    // } catch (error) {
+    //   // Handle any errors that occurred during the login process.
+    //   console.error('Error during login:', error);
+    //   this.errorMessage = 'An error occurred during login.';
+    // }
+  }
+
   onSubmit() {
     const email = this.singInForm.get('email').value;
     const password = this.singInForm.get('password').value;
-    this.registerService.logIn(email, password).then((res : any)=> {
-      localStorage.setItem("user_token", res.StringToken);
-      localStorage.setItem("regId", res.UserId);
-      localStorage.setItem("regEmail",res.Email);
-      localStorage.setItem("role", JSON.stringify(res.UserType));
-      this.user = res as User;
-      this.singInForm.reset();
-      this.router.navigateByUrl('/register-user');
-    }).catch(err=>{
-      if(err.status === 400){
-        if(err.error === "Not Verified"){
-          this.toster.error("Not Verified");
-        }
-        if(err.error === "Wrong email"){
-          this.toster.error("You must register");
-        }
-      }
-      });
+    var kratosApi = new FrontendApi({basePath:"http://localhost:4433", isJsonMime:(val) => true});
+    // this.kratosApi.createBrowserLoginFlow({})
+     var flowID = "";
+     kratosApi.createBrowserLoginFlow({}).then((value)=>{
+       flowID = value.data.id;
+       console.log(flowID);
+      // kratosApi.logi
+     })
+    // this.registerService.logIn(email, password).then((res : any)=> {
+    //   localStorage.setItem("user_token", res.StringToken);
+    //   localStorage.setItem("regId", res.UserId);
+    //   localStorage.setItem("regEmail",res.Email);
+    //   localStorage.setItem("role", JSON.stringify(res.UserType));
+    //   this.user = res as User;
+    //   this.singInForm.reset();
+    //   this.router.navigateByUrl('/register-user');
+    // }).catch(err=>{
+    //   if(err.status === 400){
+    //     if(err.error === "Not Verified"){
+    //       this.toster.error("Not Verified");
+    //     }
+    //     if(err.error === "Wrong email"){
+    //       this.toster.error("You must register");
+    //     }
+    //   }
+    //   });
   }
 
   showRegister(){

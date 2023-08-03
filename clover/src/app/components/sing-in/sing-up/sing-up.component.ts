@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, AfterViewInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, NgForm } from '@angular/forms';
 import { User } from 'src/app/entities/User/user';
 import { SingInComponent } from '../sing-in.component';
@@ -6,6 +6,9 @@ import { UserDetailsService } from 'src/app/services/userDetails/user-details.se
 import { ToastrService } from 'ngx-toastr';
 import { RegisterUserService } from 'src/app/services/userDetails/registerUser/register-user.service';
 import { Router } from '@angular/router';
+import KratosAuthService from 'src/app/services/AuthService';
+import { KratosFormDetails } from 'src/app/entities/kratosForm/KratosFormDetails';
+import { FrontendApi } from '@ory/kratos-client';
 
 export function passwordMatch(passwordGroup: FormGroup){
   if(passwordGroup.get('password').value !== passwordGroup.get('repeatPassword').value){
@@ -37,12 +40,37 @@ export class SingUpComponent implements OnInit {
   registerUser = new Array<User>();
   message: string = "SingIn";
 
+  formDetails:KratosFormDetails;
+  url:string;
+  flowId:string;
+
   @Output() messageEvent = new EventEmitter<string>();
 
-  constructor(public service: UserDetailsService, private toastr: ToastrService, private registerService: RegisterUserService, public router: Router) { }
+  constructor(public service: UserDetailsService, private kratosAuthService:KratosAuthService, private toastr: ToastrService, private registerService: RegisterUserService, public router: Router) { }
 
-  ngOnInit(): void {
-    this.resetForm();
+
+   func = async() => {
+    const flowId = this.kratosAuthService.getRegistrationFlowId();
+    const url = this.kratosAuthService.getRegistrationFlowActionUrl(flowId);
+    console.log(url);
+    const formDetails = await this.kratosAuthService.getRegistrationFlowDetails(flowId);
+    console.log(formDetails);
+    //this.url = url;
+    //this.formDetails = formDetails;
+    this.flowId = flowId;
+    console.log(flowId)
+  }
+
+  ngOnInit(): void 
+  {
+      // this.resetForm();
+
+       this.func().then(()=>{
+         console.log('done')
+       });
+
+    //  var kratosApi = new FrontendApi({basePath:"http://localhost:4433", isJsonMime:(val) => true});
+    //  kratosApi.createBrowserRegistrationFlow().then((value)=>console.log(value));
   }
 
 

@@ -67,6 +67,7 @@ import { EditCompanyProfileComponent } from './components/flights/edit-company-p
 import { ChangePasswordComponent } from './components/register-user/change-password/change-password/change-password.component';
 import { ChangeInfoComponent } from './components/register-user/change-info/change-info.component';
 import { RevenuesComponent } from './components/car/rent-a-car-filter/admin-info/revenues/revenues/revenues.component';
+import KratosAuthService from './services/AuthService';
 
 
 
@@ -138,6 +139,7 @@ import { RevenuesComponent } from './components/car/rent-a-car-filter/admin-info
     UserDetailsService,
     AuthInterceptor,
     RegisterUserComponent,
+    KratosAuthService,
     {
       provide: 'SocialAuthServiceConfig',
       useValue: {

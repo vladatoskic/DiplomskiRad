@@ -17,6 +17,11 @@ using System.Text;
 using Core.Interfaces.Services;
 using Core.Services;
 
+using Ory.Client.Api;
+using Ory.Client.Client;
+//using Microsoft.Graph;
+//using Microsoft.Graph.Models;
+
 namespace WebApiClover
 {
     public class Startup
@@ -24,6 +29,27 @@ namespace WebApiClover
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+
+            //var builder = WebApplication.CreateBuilder(args);
+            //// configure http port explicitly to override generated settings from launchSettings.json
+            //builder.WebHost.ConfigureKestrel(opt =>
+            //{
+            //    var port = builder.Configuration.GetValue<int>("APP_PORT", 5001);
+            //    opt.ListenAnyIP(port);
+            //});
+
+            //var app = builder.Build();
+
+            //// create a new Ory Client with the BasePath set to the Ory Tunnel enpoint
+            //var oryBasePath = builder.Configuration.GetValue<string>("ORY_BASEPATH") ?? "http://localhost:4000";
+            //var ory = new FrontendApi(new Configuration
+            //{
+            //    BasePath = oryBasePath
+            //});
+
+            //app.MapGet("/", () => "Hello World!");
+
+            //app.Run();
         }
 
         public IConfiguration Configuration { get; }
@@ -95,6 +121,8 @@ namespace WebApiClover
             {
                 endpoints.MapControllers();
             });
+
+            
         }
     }
 }

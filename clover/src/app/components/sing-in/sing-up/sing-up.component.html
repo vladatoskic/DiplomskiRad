@@ -28,7 +28,7 @@
                   </div>
 
                   <div style="margin-left: 10px;" class="form-group">
-                    <input type="string" name="phoneNumber" id="phoneNumber" class="form-input" placeholder="Phone number" formControlName="phoneNumber" required/>
+                    <input type="text" name="phoneNumber" id="phoneNumber" class="form-input" placeholder="Phone number" formControlName="phoneNumber" required/>
                     <div class="validation-error" *ngIf="singUpForm.get('phoneNumber').invalid && singUpForm.get('phoneNumber').touched">This field is required</div>
                   </div>
                 </div>
